@@ -1710,7 +1710,7 @@ typedef enum : NSUInteger {
                 continue;
             }
             
-            [self showHint:@"有透传消息"];
+            NSLog(@"有透传消息"); //[self showHint:@"有透传消息"];
         }
     }
 }
