@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-
+#import <AVKit/AVKit.h>
 #import "UIImage+GIF.h"
 
 #import "NSDate+Category.h"
@@ -766,14 +766,22 @@ typedef enum : NSUInteger {
     
     dispatch_block_t block = ^{
         //send the acknowledgement
-        [self _sendHasReadResponseForMessages:@[model.message]
-                                       isRead:YES];
+        [self _sendHasReadResponseForMessages:@[model.message] isRead:YES];
         
         NSURL *videoURL = [NSURL fileURLWithPath:localPath];
-        MPMoviePlayerViewController *moviePlayerController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [moviePlayerController.moviePlayer prepareToPlay];
-        moviePlayerController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        [self presentMoviePlayerViewControllerAnimated:moviePlayerController];
+        //MPMoviePlayerViewController *moviePlayerController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+        //[moviePlayerController.moviePlayer prepareToPlay];
+        //moviePlayerController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+        //[self presentMoviePlayerViewControllerAnimated:moviePlayerController];
+        
+        // BugFix: #141221 NSInvalidArgumentException
+        // MPMoviePlayerViewController is no longer available. Use AVPlayerViewController in AVKit.
+        // See Link https://bugly.qq.com/v2/crash-reporting/crashes/9974398c24/141221?pid=2
+        AVPlayerViewController *playerViewController = [AVPlayerViewController.alloc init];
+        playerViewController.player = [AVPlayer playerWithURL:videoURL];
+        playerViewController.videoGravity = AVLayerVideoGravityResizeAspect;
+        playerViewController.view.translatesAutoresizingMaskIntoConstraints = YES;
+        [self presentViewController:playerViewController animated:YES completion:nil];
     };
     
     BOOL isCustomDownload = !([EMClient sharedClient].options.isAutoTransferMessageAttachments);
