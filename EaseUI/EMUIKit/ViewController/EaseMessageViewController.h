@@ -300,7 +300,9 @@ shouldSendHasReadAckForMessage:(EMMessage *)message
 @end
 
 @interface EaseMessageViewController : EaseRefreshTableViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate, EMChatManagerDelegate, EMCDDeviceManagerDelegate, EMChatToolbarDelegate, EaseChatBarMoreViewDelegate, EMLocationViewDelegate,EMChatroomManagerDelegate, EaseMessageCellDelegate>
-
+{
+    UIView * _chatToolbar;
+}
 
 @property (weak, nonatomic) id<EaseMessageViewControllerDelegate> delegate;
 
