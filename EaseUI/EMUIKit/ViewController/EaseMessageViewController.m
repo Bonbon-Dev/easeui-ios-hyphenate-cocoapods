@@ -115,7 +115,7 @@ typedef enum : NSUInteger {
     
     //Initializa the gesture recognizer
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden:)];
-    [self.view addGestureRecognizer:tap];
+    [self.tableView addGestureRecognizer:tap];
     
     _lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     _lpgr.minimumPressDuration = 0.5;
