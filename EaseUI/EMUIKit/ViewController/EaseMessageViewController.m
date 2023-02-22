@@ -2006,6 +2006,10 @@ typedef enum : NSUInteger {
             }
         } completion:^(EMMessage *aMessage, EMError *aError) {
             [weakself.tableView reloadData];
+            // 消息发送完成的回调
+            if (weakself.delegate && [weakself.delegate respondsToSelector:@selector(messageSendingCompleted:error:)]) {
+                [weakself.delegate messageSendingCompleted:aMessage error:aError];
+            }
         }];
     }
 }

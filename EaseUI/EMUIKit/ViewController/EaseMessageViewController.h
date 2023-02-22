@@ -145,6 +145,9 @@ typedef void(^EaseSelectAtTargetCallback)(EaseAtTarget*);
 - (void)messageViewController:(EaseMessageViewController *)viewController
                selectAtTarget:(EaseSelectAtTargetCallback)selectedCallback;
 
+/// 消息发送完成的回调
+- (void)messageSendingCompleted:(EMMessage *)message error:(EMError *)error;
+
 @end
 
 
