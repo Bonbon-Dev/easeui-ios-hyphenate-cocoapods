@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface EMVoiceConverter : NSObject
+@interface EaseUI_EMVoiceConverter : NSObject
 
 + (int)isMP3File:(NSString *)filePath;
 

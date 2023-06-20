@@ -13,7 +13,7 @@
 #import "interf_enc.h"
 #import "amrFileCodec.h"
 
-@implementation EMVoiceConverter
+@implementation EaseUI_EMVoiceConverter
 
 
 + (int)isMP3File:(NSString *)filePath{

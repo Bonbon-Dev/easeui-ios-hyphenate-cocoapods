@@ -13,7 +13,7 @@
 #import "EMCDDeviceManager+Media.h"
 #import "EMAudioPlayerUtil.h"
 #import "EMAudioRecorderUtil.h"
-#import "EMVoiceConverter.h"
+#import "EaseUI_EMVoiceConverter.h"
 #import "DemoErrorCode.h"
 #import "EaseLocalDefine.h"
 
@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, EMAudioSession){
     }
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *wavFilePath = [[aFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"wav"];
-    if ([EMVoiceConverter isMP3File:aFilePath]) {
+    if ([EaseUI_EMVoiceConverter isMP3File:aFilePath]) {
         wavFilePath = aFilePath;
     } else {
         if (![fileManager fileExistsAtPath:wavFilePath]) {
@@ -266,7 +266,7 @@ typedef NS_ENUM(NSInteger, EMAudioSession){
     BOOL ret = NO;
     BOOL isFileExists = [[NSFileManager defaultManager] fileExistsAtPath:amrFilePath];
     if (isFileExists) {
-        [EMVoiceConverter amrToWav:amrFilePath wavSavePath:wavFilePath];
+        [EaseUI_EMVoiceConverter amrToWav:amrFilePath wavSavePath:wavFilePath];
         isFileExists = [[NSFileManager defaultManager] fileExistsAtPath:wavFilePath];
         if (isFileExists) {
             ret = YES;
@@ -281,7 +281,7 @@ typedef NS_ENUM(NSInteger, EMAudioSession){
     BOOL ret = NO;
     BOOL isFileExists = [[NSFileManager defaultManager] fileExistsAtPath:wavFilePath];
     if (isFileExists) {
-        [EMVoiceConverter wavToAmr:wavFilePath amrSavePath:amrFilePath];
+        [EaseUI_EMVoiceConverter wavToAmr:wavFilePath amrSavePath:amrFilePath];
         isFileExists = [[NSFileManager defaultManager] fileExistsAtPath:amrFilePath];
         if (!isFileExists) {
             
