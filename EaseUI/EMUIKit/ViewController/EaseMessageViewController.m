@@ -1157,7 +1157,7 @@ typedef enum : NSUInteger {
 
                     NSData *data = [NSData dataWithContentsOfFile:path];
                     if (data) {
-                        model.image = [UIImage sd_animatedGIFWithData:data];
+                        model.image = [UIImage sd_imageWithGIFData:data];
                     } else {
                         model.image = [UIImage imageNamed:emotion.emotionOriginal];
                     }
