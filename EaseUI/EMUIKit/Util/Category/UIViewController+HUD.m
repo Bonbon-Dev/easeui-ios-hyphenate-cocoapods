@@ -29,9 +29,18 @@ static const void *HttpRequestHUDKey = &HttpRequestHUDKey;
 
 - (void)showHudInView:(UIView *)view hint:(NSString *)hint{
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
-    HUD.labelText = hint;
+    // MBProgressHUD 升级到 1.2.0
+    // 设置为黑色背景，白色文字
+    HUD.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    HUD.bezelView.backgroundColor = [UIColor blackColor];
+    // 设置菊花颜色为白色
+    HUD.removeFromSuperViewOnHide = YES;
+    [UIActivityIndicatorView appearanceWhenContainedIn:[MBProgressHUD class], nil].color = [UIColor whiteColor];
+    HUD.label.textColor = [UIColor whiteColor];
+    HUD.label.text = hint;
     [view addSubview:HUD];
-    [HUD show:YES];
+    [HUD showAnimated:YES];
+    
     [self setHUD:HUD];
 }
 
@@ -42,11 +51,17 @@ static const void *HttpRequestHUDKey = &HttpRequestHUDKey;
     hud.userInteractionEnabled = NO;
     // Configure for text only and offset down
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = hint;
+    // MBProgressHUD 升级到 1.2.0
+    // 设置为黑色背景，白色文字
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.bezelView.backgroundColor = [UIColor blackColor];
+    hud.bezelView.alpha = 0.85;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.label.text = hint;
     hud.margin = 10.f;
-    hud.yOffset = 180;
+    [hud setOffset:CGPointMake(0, 180)];
     hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:2];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 - (void)showHint:(NSString *)hint yOffset:(float)yOffset
@@ -56,16 +71,22 @@ static const void *HttpRequestHUDKey = &HttpRequestHUDKey;
     hud.userInteractionEnabled = NO;
     // Configure for text only and offset down
     hud.mode = MBProgressHUDModeText;
-    hud.labelText = hint;
+    // MBProgressHUD 升级到 1.2.0
+    // 设置为黑色背景，白色文字
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.bezelView.backgroundColor = [UIColor blackColor];
+    hud.bezelView.alpha = 0.85;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.label.text = hint;
     hud.margin = 10.f;
-    hud.yOffset = 180;
-    hud.yOffset += yOffset;
+    // 设置视图相对于父视图中心点的偏移量
+    [hud setOffset:CGPointMake(0, 180 + yOffset)];
     hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:2];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 - (void)hideHud{
-    [[self HUD] hide:YES];
+    [[self HUD] hideAnimated:YES];
 }
 
 @end

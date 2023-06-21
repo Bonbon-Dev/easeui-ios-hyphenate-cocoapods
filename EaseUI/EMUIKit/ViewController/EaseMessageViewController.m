@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-
+#import <AVKit/AVKit.h>
 #import "UIImage+GIF.h"
 
 #import "NSDate+Category.h"
@@ -115,7 +115,7 @@ typedef enum : NSUInteger {
     
     //Initializa the gesture recognizer
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden:)];
-    [self.view addGestureRecognizer:tap];
+    [self.tableView addGestureRecognizer:tap];
     
     _lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
     _lpgr.minimumPressDuration = 0.5;
@@ -766,14 +766,22 @@ typedef enum : NSUInteger {
     
     dispatch_block_t block = ^{
         //send the acknowledgement
-        [self _sendHasReadResponseForMessages:@[model.message]
-                                       isRead:YES];
+        [self _sendHasReadResponseForMessages:@[model.message] isRead:YES];
         
         NSURL *videoURL = [NSURL fileURLWithPath:localPath];
-        MPMoviePlayerViewController *moviePlayerController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
-        [moviePlayerController.moviePlayer prepareToPlay];
-        moviePlayerController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        [self presentMoviePlayerViewControllerAnimated:moviePlayerController];
+        //MPMoviePlayerViewController *moviePlayerController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+        //[moviePlayerController.moviePlayer prepareToPlay];
+        //moviePlayerController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+        //[self presentMoviePlayerViewControllerAnimated:moviePlayerController];
+        
+        // BugFix: #141221 NSInvalidArgumentException
+        // MPMoviePlayerViewController is no longer available. Use AVPlayerViewController in AVKit.
+        // See Link https://bugly.qq.com/v2/crash-reporting/crashes/9974398c24/141221?pid=2
+        AVPlayerViewController *playerViewController = [AVPlayerViewController.alloc init];
+        playerViewController.player = [AVPlayer playerWithURL:videoURL];
+        playerViewController.videoGravity = AVLayerVideoGravityResizeAspect;
+        playerViewController.view.translatesAutoresizingMaskIntoConstraints = YES;
+        [self presentViewController:playerViewController animated:YES completion:nil];
     };
     
     BOOL isCustomDownload = !([EMClient sharedClient].options.isAutoTransferMessageAttachments);
@@ -1144,7 +1152,16 @@ typedef enum : NSUInteger {
             if (_dataSource && [_dataSource respondsToSelector:@selector(emotionURLFormessageViewController:messageModel:)]) {
                 EaseEmotion *emotion = [_dataSource emotionURLFormessageViewController:self messageModel:model];
                 if (emotion) {
-                    model.image = [UIImage sd_animatedGIFNamed:emotion.emotionOriginal];
+                    // 升级SDWebImage 到4.4.8
+                    NSString *path = [[NSBundle mainBundle] pathForResource:emotion.emotionOriginal ofType:@"gif"];
+
+                    NSData *data = [NSData dataWithContentsOfFile:path];
+                    if (data) {
+                        model.image = [UIImage sd_animatedGIFWithData:data];
+                    } else {
+                        model.image = [UIImage imageNamed:emotion.emotionOriginal];
+                    }
+                    
                     model.fileURLPath = emotion.emotionOriginalURL;
                 }
             }
@@ -1710,7 +1727,7 @@ typedef enum : NSUInteger {
                 continue;
             }
             
-            [self showHint:@"有透传消息"];
+            NSLog(@"有透传消息"); //[self showHint:@"有透传消息"];
         }
     }
 }
@@ -1989,6 +2006,10 @@ typedef enum : NSUInteger {
             }
         } completion:^(EMMessage *aMessage, EMError *aError) {
             [weakself.tableView reloadData];
+            // 消息发送完成的回调
+            if (weakself.delegate && [weakself.delegate respondsToSelector:@selector(messageSendingCompleted:error:)]) {
+                [weakself.delegate messageSendingCompleted:aMessage error:aError];
+            }
         }];
     }
 }

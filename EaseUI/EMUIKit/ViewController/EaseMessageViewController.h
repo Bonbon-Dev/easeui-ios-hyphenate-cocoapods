@@ -145,6 +145,9 @@ typedef void(^EaseSelectAtTargetCallback)(EaseAtTarget*);
 - (void)messageViewController:(EaseMessageViewController *)viewController
                selectAtTarget:(EaseSelectAtTargetCallback)selectedCallback;
 
+/// 消息发送完成的回调
+- (void)messageSendingCompleted:(EMMessage *)message error:(EMError *)error;
+
 @end
 
 
@@ -300,7 +303,9 @@ shouldSendHasReadAckForMessage:(EMMessage *)message
 @end
 
 @interface EaseMessageViewController : EaseRefreshTableViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate, EMChatManagerDelegate, EMCDDeviceManagerDelegate, EMChatToolbarDelegate, EaseChatBarMoreViewDelegate, EMLocationViewDelegate,EMChatroomManagerDelegate, EaseMessageCellDelegate>
-
+{
+    UIView * _chatToolbar;
+}
 
 @property (weak, nonatomic) id<EaseMessageViewControllerDelegate> delegate;
 
