@@ -584,7 +584,9 @@ typedef enum : NSUInteger {
         }
         else
         {
-            [weakSelf showHint:@"获取缩略图失败!"];
+            if (aMessage.body.type != EMMessageBodyTypeImage) {
+                [weakSelf showHint:@"获取缩略图失败!"];
+            }
         }
     };
     
