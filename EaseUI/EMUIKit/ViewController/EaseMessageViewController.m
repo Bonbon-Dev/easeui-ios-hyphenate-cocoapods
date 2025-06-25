@@ -562,8 +562,10 @@ typedef enum : NSUInteger {
 - (void)_customDownloadMessageFile:(EMMessage *)aMessage
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"message.autoTransfer", @"Please customize the  transfer attachment method") delegate:nil cancelButtonTitle:NSLocalizedString(@"sure", @"OK") otherButtonTitles:nil, nil];
-        [alertView show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"message.autoTransfer", @"Please customize the  transfer attachment method") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"sure", @"OK") style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:confirmAction];
+        [self presentViewController:alertController animated:YES completion:nil];
     });
 }
 
@@ -1542,8 +1544,10 @@ typedef enum : NSUInteger {
                 break;
             case EMCanNotRecord:
             {
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"prompt", @"Prompt") message:NSLocalizedString(@"record.failToPermission", @"No recording permission") delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", @"OK") otherButtonTitles:nil, nil];
-                [alertView show];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"prompt", @"Prompt") message:NSLocalizedString(@"record.failToPermission", @"No recording permission") preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"ok", @"OK") style:UIAlertActionStyleDefault handler:nil];
+                [alertController addAction:confirmAction];
+                [weakSelf presentViewController:alertController animated:YES completion:nil];
             }
                 break;
             default:
@@ -1996,8 +2000,10 @@ typedef enum : NSUInteger {
     
     __weak typeof(self) weakself = self;
     if (!([EMClient sharedClient].options.isAutoTransferMessageAttachments) && isUploadFile) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"message.autoTransfer", @"Please customize the transfer attachment method") delegate:nil cancelButtonTitle:NSLocalizedString(@"sure", @"OK") otherButtonTitles:nil, nil];
-        [alertView show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"message.autoTransfer", @"Please customize the transfer attachment method") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"sure", @"OK") style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:confirmAction];
+        [self presentViewController:alertController animated:YES completion:nil];
     } else {
         [self addMessageToDataSource:message
                             progress:nil];

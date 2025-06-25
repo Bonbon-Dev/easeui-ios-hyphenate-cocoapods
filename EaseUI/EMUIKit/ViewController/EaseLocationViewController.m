@@ -140,12 +140,12 @@ static EaseLocationViewController *defaultLocation = nil;
 {
     [self hideHud];
     if (error.code == 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
-                                                            message:[error.userInfo objectForKey:NSLocalizedRecoverySuggestionErrorKey]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil, nil];
-        [alertView show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:[error.userInfo objectForKey:NSLocalizedRecoverySuggestionErrorKey]
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+        [alertController addAction:confirmAction];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
